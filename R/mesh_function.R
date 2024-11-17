@@ -77,28 +77,6 @@ pubmed_mesh_online <- function(csv_file = system.file("mesh.csv",package = "getM
     return(lists)
   }
 
-  # 创建深度嵌套的 OR 查询
-  create_nested_or_query <- function(terms) {
-    terms <- unique(terms[terms != ""])  # 去除空字符串和重复项
-
-    # 如果只剩下一个term，直接返回
-    if (length(terms) == 1) {
-      return(paste0("(", terms, ")"))
-    }
-
-    # 如果有多个term，递归构建深度嵌套的OR结构
-    create_nested <- function(terms) {
-      if (length(terms) == 1) {
-        return(terms)
-      }
-      mid <- floor(length(terms) / 2)
-      left <- create_nested(terms[1:mid])
-      right <- create_nested(terms[(mid+1):length(terms)])
-      return(paste0("(", left, " OR ", right, ")"))
-    }
-
-    return(create_nested(terms))
-  }
 
   # 创建搜索查询函数
   create_search_query <- function(df) {
@@ -150,4 +128,33 @@ pubmed_mesh_online <- function(csv_file = system.file("mesh.csv",package = "getM
 
   # 打印最终查询
   cat(final_query, sep = "\n")
+}
+
+#' Title
+#'
+#' @param terms
+#'
+#' @return
+#'
+#' @examples
+create_nested_or_query <- function(terms) {
+  terms <- unique(terms[terms != ""])  # 去除空字符串和重复项
+
+  # 如果只剩下一个term，直接返回
+  if (length(terms) == 1) {
+    return(paste0("(", terms, ")"))
+  }
+
+  # 如果有多个term，递归构建深度嵌套的OR结构
+  create_nested <- function(terms) {
+    if (length(terms) == 1) {
+      return(terms)
+    }
+    mid <- floor(length(terms) / 2)
+    left <- create_nested(terms[1:mid])
+    right <- create_nested(terms[(mid+1):length(terms)])
+    return(paste0("(", left, " OR ", right, ")"))
+  }
+
+  return(create_nested(terms))
 }
