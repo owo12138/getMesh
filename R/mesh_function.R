@@ -14,6 +14,7 @@
 pubmed_mesh <- function(csv_file = system.file("mesh.csv", package = "getMesh"),
                         source = "m") {
   # 验证 source 参数
+  print(paste("调用的source是",source))
   if (!source %in% c("m", "o", "l")) {
     stop("Error: 'source' 参数必须是 'm'（混合），'o'（在线），或 'l'（本地）之一。")
   }
@@ -35,7 +36,8 @@ pubmed_mesh <- function(csv_file = system.file("mesh.csv", package = "getMesh"),
         cat("Debug: 使用本地数据，关键词:", keyword, "\n")  # 调试信息
         local_data$topic <- names(local_mesh_list[[keyword]])
         local_data$entry_terms <- local_mesh_list[[keyword]]
-      }
+      }else{cat("Debug: 未找到本地数据，关键词:", keyword, "\n")  # 调试信息
+        }
     }
 
     # 根据 source 参数决定获取在线数据
